@@ -32,7 +32,7 @@ def wots_sk_gen(secret_seed, adrs: ADRS):  # Not necessary
     for i in range(0, len_0):
         adrs.set_chain_address(i)
         adrs.set_hash_address(0)
-        sk.append(prf(secret_seed, adrs))
+        sk.append(prf(secret_seed, adrs.copy()))
     return sk
 
 
@@ -44,8 +44,8 @@ def wots_pk_gen(secret_seed, public_seed, adrs: ADRS):
     for i in range(0, len_0):
         adrs.set_chain_address(i)
         adrs.set_hash_address(0)
-        sk = prf(secret_seed, adrs)
-        tmp += bytes(chain(sk, 0, w - 1, public_seed, adrs))
+        sk = prf(secret_seed, adrs.copy())
+        tmp += bytes(chain(sk, 0, w - 1, public_seed, adrs.copy()))
 
     wots_pk_adrs.set_type(ADRS.WOTS_PK)
     wots_pk_adrs.set_key_pair_address(adrs.get_key_pair_address())
@@ -73,8 +73,8 @@ def wots_sign(m, secret_seed, public_seed, adrs):
     for i in range(0, len_0):
         adrs.set_chain_address(i)
         adrs.set_hash_address(0)
-        sk = prf(secret_seed, adrs)
-        sig += [chain(sk, 0, msg[i], public_seed, adrs)]
+        sk = prf(secret_seed, adrs.copy())
+        sig += [chain(sk, 0, msg[i], public_seed, adrs.copy())]
 
     return sig
 
@@ -96,7 +96,7 @@ def wots_pk_from_sig(sig, m, public_seed, adrs: ADRS):
     tmp = bytes()
     for i in range(0, len_0):
         adrs.set_chain_address(i)
-        tmp += chain(sig[i], msg[i], w - 1 - msg[i], public_seed, adrs)
+        tmp += chain(sig[i], msg[i], w - 1 - msg[i], public_seed, adrs.copy())
 
     wots_pk_adrs.set_type(ADRS.WOTS_PK)
     wots_pk_adrs.set_key_pair_address(adrs.get_key_pair_address())

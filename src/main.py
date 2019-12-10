@@ -19,11 +19,17 @@ secret_seed = b'42qq'
 public_seed = b'420e'
 
 m = b'joff'
+idx = 255
 
+pk = ht_pk_gen(secret_seed, public_seed)
+sig = ht_sign(m, secret_seed, public_seed, idx, 25)
+
+
+
+print(ht_verify(m,sig,public_seed,idx,25,pk))
+"""
 pk = xmss_pk_gen(secret_seed, public_seed, ADRS())
-print_bytes_int(pk)
-
-sig_xmss = xmss_sign(m, secret_seed, 1, public_seed, ADRS())
-
-pk_sig = xmss_pk_from_sig(1, sig_xmss, m, public_seed, ADRS())
-print_bytes_int(pk_sig)
+sig = xmss_sign(m, secret_seed, idx, public_seed, ADRS())
+print(pk)
+print(xmss_pk_from_sig(idx, sig, m, public_seed, ADRS()))
+"""

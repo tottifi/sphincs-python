@@ -51,11 +51,16 @@ class ADRS:
 
     def set_type(self, val):
         self.type = val
-        if val == ADRS.WOTS_PK or val == ADRS.FORS_COMP:
-            self.word_2 = 0
-            self.word_3 = 0
-        elif val == ADRS.TREE:
-            self.word_1 = 0
+
+        self.word_2 = 0
+        self.word_3 = 0
+        self.word_1 = 0
+
+    def set_layer_address(self, val):
+        self.layer = val
+
+    def set_tree_address(self, val):
+        self.tree_address = val
 
     def set_key_pair_address(self, val):
         self.word_1 = val

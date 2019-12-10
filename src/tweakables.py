@@ -2,14 +2,15 @@
 Hashing functions and pseudo-random generators (tweakables)
 """
 
+from src.utils import *
 from src.parameters import *
 from src.adrs import *
 import math
 import hashlib
 import random
 
-def hash(seed, adrs: ADRS, value, digest_size=n):
 
+def hash(seed, adrs: ADRS, value, digest_size=n):
     m = hashlib.sha256()
 
     m.update(seed)
@@ -20,9 +21,10 @@ def hash(seed, adrs: ADRS, value, digest_size=n):
 
     return hashed
 
+
 def prf(secret_seed, adrs):
     random.seed(int.from_bytes(secret_seed + adrs.to_bin(), "big"))
-    return random.randint(0, 256**n).to_bytes(n, byteorder='big')
+    return random.randint(0, 256 ** n).to_bytes(n, byteorder='big')
 
 
 # Input: len_X-byte string X, int w, output length out_len
@@ -52,3 +54,11 @@ def sig_wots_from_sig_xmss(sig):
 
 def auth_from_sig_xmss(sig):
     return sig[len_0:]
+
+
+def sigs_xmss_from_sig_ht(sig):
+    sigs = []
+    for i in range(0, d):
+        sigs.append(sig[i*(h_prime + len_0):(i+1)*(h_prime + len_0)])
+
+    return sigs
