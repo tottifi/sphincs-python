@@ -21,12 +21,14 @@ public_seed = b'420e'
 m = b'joff'
 idx = 255
 
-pk = ht_pk_gen(secret_seed, public_seed)
-sig = ht_sign(m, secret_seed, public_seed, idx, 25)
+pk = fors_pk_gen(secret_seed, public_seed, ADRS())
+sig = fors_sign(bytes([254, 61]), secret_seed, public_seed, ADRS())
 
+print(pk)
+print(fors_pk_from_sig(sig, bytes([254, 61]), public_seed, ADRS()))
 
+print(4)
 
-print(ht_verify(m,sig,public_seed,idx,25,pk))
 """
 pk = xmss_pk_gen(secret_seed, public_seed, ADRS())
 sig = xmss_sign(m, secret_seed, idx, public_seed, ADRS())

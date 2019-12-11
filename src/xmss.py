@@ -8,35 +8,33 @@ from src.adrs import *
 from src.wots import *
 import math
 
-stack2 = []
 # Input: Secret seed SK.seed, start index s, target node height z, public seed PK.seed, address ADRS
 # Output: n-byte root node - top node on Stack
 def treehash(secret_seed, s, z, public_seed, adrs: ADRS):
     if s % (1 << z) != 0:
         return -1
-    stack3 =[]
-    stack3.append(adrs.copy())
+
     stack = []
+
     for i in range(0, 2**z):
         adrs.set_type(ADRS.WOTS_HASH)
         adrs.set_key_pair_address(s + i)
         node = wots_pk_gen(secret_seed, public_seed, adrs.copy())
+
         adrs.set_type(ADRS.TREE)
         adrs.set_tree_height(1)
         adrs.set_tree_index(s + i)
-        stack3.append({'node': node, 'height': adrs.get_tree_height()})
 
         if len(stack) > 0:
             while stack[len(stack) - 1]['height'] == adrs.get_tree_height():
                 adrs.set_tree_index((adrs.get_tree_index() - 1) // 2)
                 node = hash(public_seed, adrs.copy(), stack.pop()['node'] + node, n)
                 adrs.set_tree_height(adrs.get_tree_height() + 1)
-                stack3.append({'node': node, 'height': adrs.get_tree_height()})
+
                 if len(stack) <= 0:
                     break
 
         stack.append({'node': node, 'height': adrs.get_tree_height()})
-    stack2.append(stack3)
 
     return stack.pop()['node']
 
@@ -50,7 +48,7 @@ def xmss_pk_gen(secret_seed, public_key, adrs: ADRS):
 
 # Input: n-byte message M, secret seed SK.seed, index idx, public seed PK.seed, address ADRS
 # Output: XMSS signature SIG_XMSS = (sig || AUTH)
-def xmss_sign(m, secret_key, idx, public_key, adrs):
+def xmss_sign(m, secret_seed, idx, public_seed, adrs):
     auth = []
     for j in range(0, h_prime):
         ki = math.floor(idx // 2**j)
@@ -59,12 +57,12 @@ def xmss_sign(m, secret_key, idx, public_key, adrs):
         else:
             ki += 1
 
-        auth += [treehash(secret_key, ki * 2**j, j, public_key, adrs.copy())]
+        auth += [treehash(secret_seed, ki * 2**j, j, public_seed, adrs.copy())]
 
     adrs.set_type(ADRS.WOTS_HASH)
     adrs.set_key_pair_address(idx)
 
-    sig = wots_sign(m, secret_key, public_key, adrs.copy())
+    sig = wots_sign(m, secret_seed, public_seed, adrs.copy())
     sig_xmss = sig + auth
     return sig_xmss
 

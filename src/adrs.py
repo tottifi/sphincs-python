@@ -9,7 +9,7 @@ class ADRS:
     WOTS_PK = 1
     TREE = 2
     FORS_TREE = 3
-    FORS_COMP = 4
+    FORS_ROOTS = 4
 
     def __init__(self):
         self.layer = 0

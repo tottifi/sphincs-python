@@ -62,3 +62,13 @@ def sigs_xmss_from_sig_ht(sig):
         sigs.append(sig[i*(h_prime + len_0):(i+1)*(h_prime + len_0)])
 
     return sigs
+
+
+def auths_from_sig_fors(sig):
+    sigs = []
+    for i in range(0, k):
+        sigs.append([])
+        sigs[i].append(sig[(a+1) * i])
+        sigs[i].append(sig[((a+1) * i + 1):((a+1) * (i+1))])
+
+    return sigs

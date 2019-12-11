@@ -19,7 +19,7 @@ d = 3
 # FORS trees numbers
 k = 4
 
-# FORS leaves numbers
+# FORS trees height
 a = 4
 
 
@@ -32,3 +32,6 @@ len_0 = len_1 + len_2
 
 # XMSS Sub-Trees height
 h_prime = h // d
+
+# FORS trees leaves number
+t = 2**a
