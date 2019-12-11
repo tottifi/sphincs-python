@@ -42,7 +42,7 @@ def fors_treehash(secret_seed, s, z, public_seed, adrs):
                 if len(stack) <= 0:
                     break
         stack.append({'node': node, 'height': adrs.get_tree_height()})
-    
+
     return stack.pop()['node']
 
 

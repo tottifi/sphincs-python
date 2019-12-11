@@ -27,6 +27,37 @@ def prf(secret_seed, adrs):
     return random.randint(0, 256 ** n).to_bytes(n, byteorder='big')
 
 
+def hash_msg(r, public_seed, public_root, value, digest_size=n):
+    m = hashlib.sha256()
+
+    m.update(r)
+    m.update(public_seed)
+    m.update(public_root)
+    m.update(value)
+
+    hashed = m.digest()[:digest_size]
+
+    i = 0
+    while len(hashed) < digest_size:
+        i += 1
+        m = hashlib.sha256()
+
+        m.update(r)
+        m.update(public_seed)
+        m.update(public_root)
+        m.update(value)
+        m.update(bytes([i]))
+
+        hashed += m.digest()[:digest_size - len(hashed)]
+
+    return hashed
+
+
+def prf_msg(secret_seed, opt, m):
+    random.seed(int.from_bytes(secret_seed + opt + hash_msg(b'0', b'0', b'0', m, n*2), "big"))
+    return random.randint(0, 256 ** n).to_bytes(n, byteorder='big')
+
+
 # Input: len_X-byte string X, int w, output length out_len
 # Output: out_len int array basew
 def base_w(x, w, out_len):

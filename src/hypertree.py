@@ -60,7 +60,6 @@ def ht_verify(m, sig_ht, public_seed, idx_tree, idx_leaf, public_key_ht):
         idx_leaf = idx_tree % 2**h_prime
         #idx_tree = (idx_tree - idx_tree % (2**(h - (j+1) * h_prime))) // (2**(h - (j+1) * h_prime))
         idx_tree = idx_tree >> h_prime
-        print(idx_tree)
 
         sig_tmp = sigs_xmss[j]
 

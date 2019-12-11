@@ -4,11 +4,14 @@ Parameters
 
 import math
 
+# Randomness to signatures
+RANDOMIZE = True
+
 # Security parameter (in bytes)
-n = 4
+n = 32
 
 # Winternitz parameter
-w = 4
+w = 16
 
 # Hypertree height
 h = 12
@@ -17,7 +20,7 @@ h = 12
 d = 3
 
 # FORS trees numbers
-k = 4
+k = 8
 
 # FORS trees height
 a = 4
