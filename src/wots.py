@@ -64,7 +64,8 @@ def wots_sign(m, secret_seed, public_seed, adrs):
     for i in range(0, len_1):
         csum += w - 1 - msg[i]
 
-    csum = csum << (8 - ((len_2 * math.floor(math.log(w, 2))) % 8))
+    padding = (len_2 * math.floor(math.log(w, 2))) % 8 if (len_2 * math.floor(math.log(w, 2))) % 8 != 0 else 8
+    csum = csum << (8 - padding)
     csumb = csum.to_bytes(math.ceil((len_2 * math.floor(math.log(w, 2))) / 8), byteorder='big')
     csumw = base_w(csumb, w, len_2)
     msg += csumw
@@ -88,7 +89,8 @@ def wots_pk_from_sig(sig, m, public_seed, adrs: ADRS):
     for i in range(0, len_1):
         csum += w - 1 - msg[i]
 
-    csum = csum << (8 - ((len_2 * math.floor(math.log(w, 2))) % 8))
+    padding = (len_2 * math.floor(math.log(w, 2))) % 8 if (len_2 * math.floor(math.log(w, 2))) % 8 != 0 else 8
+    csum = csum << (8 - padding)
     csumb = csum.to_bytes(math.ceil((len_2 * math.floor(math.log(w, 2))) / 8), byteorder='big')
     csumw = base_w(csumb, w, len_2)
     msg += csumw

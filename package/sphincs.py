@@ -58,6 +58,13 @@ def prf_msg(secret_seed, opt, m, digest_size):
     random.seed(int.from_bytes(secret_seed + opt + hash_msg(b'0', b'0', b'0', m, digest_size * 2), "big"))
     return random.randint(0, 256 ** digest_size - 1).to_bytes(digest_size, byteorder='big')
 
+def print_bytes_bit(value):
+    array = []
+    for val in value:
+        for j in range(7, -1, -1):
+            array.append((val >> j) % 2)
+    print(array)
+
 
 # Input: len_X-byte string X, int w, output length out_len
 # Output: out_len int array basew
@@ -328,9 +335,12 @@ class Sphincs():
         for i in range(0, self._len_1):
             csum += self._w - 1 - msg[i]
 
-        csum = csum << (8 - ((self._len_2 * math.floor(math.log(self._w, 2))) % 8))
-        csumb = csum.to_bytes(math.ceil((self._len_2 * math.floor(math.log(self._w, 2))) / 8) + 1, byteorder='big')
+        padding = (self._len_2 * math.floor(math.log(self._w, 2))) % 8 if (self._len_2 * math.floor(math.log(self._w, 2))) % 8 != 0 else 8
+        csum = csum << (8 - padding)
+        csumb = csum.to_bytes(math.ceil((self._len_2 * math.floor(math.log(self._w, 2))) / 8), byteorder='big')
         csumw = base_w(csumb, self._w, self._len_2)
+        print(csumw)
+        print()
         msg += csumw
 
         sig = []
@@ -351,8 +361,9 @@ class Sphincs():
         for i in range(0, self._len_1):
             csum += self._w - 1 - msg[i]
 
-        csum = csum << (8 - ((self._len_2 * math.floor(math.log(self._w, 2))) % 8))
-        csumb = csum.to_bytes(math.ceil((self._len_2 * math.floor(math.log(self._w, 2))) / 8) + 1, byteorder='big')
+        padding = (self._len_2 * math.floor(math.log(self._w, 2))) % 8 if (self._len_2 * math.floor(math.log(self._w, 2))) % 8 != 0 else 8
+        csum = csum << (8 - padding)
+        csumb = csum.to_bytes(math.ceil((self._len_2 * math.floor(math.log(self._w, 2))) / 8), byteorder='big')
         csumw = base_w(csumb, self._w, self._len_2)
         msg += csumw
 
