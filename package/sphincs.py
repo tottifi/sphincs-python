@@ -152,11 +152,11 @@ class Sphincs():
 
         return sig
 
-    def verify(self, sig, m, pk):
+    def verify(self, m, sig, pk):
         """
         Check integrity of signature
-        :param sig: Signature of m
         :param m: Message signed
+        :param sig: Signature of m
         :param pk: Public Key
         :return: Boolean True if signature correct
         """
